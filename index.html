@@ -6,6 +6,8 @@
     <title>PokéDex GBA Master - Dark Edition</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
@@ -16,21 +18,19 @@
             --text-main: #e0e0e0;
             --gba-green: #2ecc71;
             
-            /* Cores dos Tipos Pokemon */
-            --fire: #ff4422; --water: #3399ff; --grass: #77cc55;
-            --electric: #ffcc33; --ice: #66ccff; --fighting: #bb5544;
-            --poison: #aa5599; --ground: #ddbb55; --flying: #8899ff;
-            --psychic: #ff5599; --bug: #aabb22; --rock: #bbaa66;
-            --ghost: #6666bb; --dragon: #7766ee; --dark: #775544;
-            --steel: #aaaabb; --fairy: #ee99ee; --normal: #aaaa99;
+            /* Pokemon Type Colors */
+            --normal: #A8A77A; --fire: #EE8130; --water: #6390F0; --electric: #F7D02C;
+            --grass: #7AC74C; --ice: #96D9D6; --fighting: #C22E28; --poison: #A33EA1;
+            --ground: #E2BF65; --flying: #A98FF3; --psychic: #F95587; --bug: #A6B91A;
+            --rock: #B6A136; --ghost: #735797; --dragon: #6F35FC; --dark: #705746;
+            --steel: #B7B7CE; --fairy: #D685AD;
         }
 
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
             font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
+            overflow-x: hidden;
         }
 
         h1, h2, h3, .navbar-brand {
@@ -39,63 +39,75 @@
             letter-spacing: 2px;
         }
 
-        /* Navbar Customizada */
+        /* Navbar */
         .navbar {
             background-color: rgba(11, 11, 14, 0.95);
             border-bottom: 2px solid var(--accent-color);
             backdrop-filter: blur(10px);
-            padding: 15px 0;
         }
 
-        /* Header / Hero */
+        /* Hero Section */
         .hero-section {
-            padding: 120px 0 60px;
-            background: radial-gradient(circle at top, rgba(255,31,31,0.15) 0%, rgba(11,11,14,1) 70%);
+            padding: 100px 0 50px;
+            background: linear-gradient(180deg, rgba(255,31,31,0.1) 0%, rgba(11,11,14,1) 100%);
             text-align: center;
         }
 
-        /* Container de Filtros */
+        /* Filters Section */
         .filter-box {
             background: var(--card-bg);
             border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            margin-bottom: 50px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 40px;
             border: 1px solid #2a2a35;
         }
 
         .form-select, .form-control {
             background-color: #0b0b0e;
             border: 1px solid #333;
-            color: #fff;
-            padding: 12px;
-            transition: all 0.3s ease;
+            color: white;
+            transition: all 0.3s;
         }
 
         .form-select:focus, .form-control:focus {
             background-color: #1a1a24;
             border-color: var(--accent-color);
             color: white;
-            box-shadow: 0 0 15px rgba(255, 31, 31, 0.3);
+            box-shadow: 0 0 10px rgba(255, 31, 31, 0.3);
         }
 
-        /* Card do Pokemon */
+        .btn-confirm {
+            background: var(--accent-color);
+            border: none;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            height: 100%;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-confirm:hover {
+            background: #cc1919;
+            box-shadow: 0 0 15px rgba(255, 31, 31, 0.5);
+        }
+
+        /* Pokemon Card */
         .poke-card {
             background: var(--card-bg);
             border-radius: 20px;
             overflow: hidden;
             position: relative;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
             cursor: pointer;
             margin-bottom: 30px;
             border: 1px solid #2a2a35;
-            height: 100%;
         }
 
         .poke-card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.7);
         }
 
         .card-img-container {
@@ -103,20 +115,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 80%);
-            position: relative;
-            margin-top: 15px;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 70%);
         }
 
         .poke-img {
-            width: 140px;
+            width: 130px;
             z-index: 2;
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.1));
-            transition: transform 0.3s ease;
+            transition: 0.3s;
         }
 
         .poke-card:hover .poke-img {
-            transform: scale(1.15);
+            transform: scale(1.1);
         }
 
         .card-info {
@@ -124,236 +133,201 @@
             text-align: center;
         }
 
-        /* Badges de Tipo */
         .type-badge {
-            padding: 4px 12px;
-            border-radius: 6px;
+            padding: 4px 10px;
+            border-radius: 5px;
             font-size: 0.75rem;
-            font-weight: 700;
+            font-weight: bold;
             text-transform: uppercase;
             margin: 2px;
             display: inline-block;
-            color: #fff;
+            color: white;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
-        /* Bordas Coloridas Dinâmicas (Efeito Visual pedido) */
-        .glow-fire { border-bottom: 5px solid var(--fire); }
-        .glow-water { border-bottom: 5px solid var(--water); }
-        .glow-grass { border-bottom: 5px solid var(--grass); }
-        .glow-electric { border-bottom: 5px solid var(--electric); }
-        .glow-psychic { border-bottom: 5px solid var(--psychic); }
+        /* Efeitos Dinâmicos de Borda */
+        .glow-fire { border-bottom: 4px solid var(--fire); }
+        .glow-water { border-bottom: 4px solid var(--water); }
+        .glow-grass { border-bottom: 4px solid var(--grass); }
+        .glow-electric { border-bottom: 4px solid var(--electric); }
+        .glow-psychic { border-bottom: 4px solid var(--psychic); }
+        .glow-dragon { border-bottom: 4px solid var(--dragon); }
 
-        /* Modal de Detalhes */
+        /* Modal Customization (Popup Analítico) */
         .modal-content {
             background-color: var(--card-bg);
-            color: #fff;
-            border: 1px solid #333;
-            border-radius: 30px;
-            box-shadow: 0 0 50px rgba(0,0,0,1);
+            color: white;
+            border: 1px solid #444;
+            border-radius: 25px;
         }
 
-        .evo-chain {
+        /* Gráficos de Status */
+        .stat-row {
+            margin-bottom: 10px;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #aaa;
+            text-transform: uppercase;
             display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 25px;
+            justify-content: space-between;
+        }
+        .stat-bar-bg {
+            background: #0b0b0e;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .stat-bar-fill {
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 5px;
+            width: 0;
+            transition: width 1s ease-in-out;
+        }
+
+        /* Cadeia Evolutiva Clicável */
+        .evo-cycle-container {
             background: rgba(0,0,0,0.3);
             border-radius: 20px;
-            margin-top: 15px;
+            padding: 20px;
+            margin-top: 20px;
         }
-
+        .evo-item {
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 10px;
+            border-radius: 15px;
+        }
+        .evo-item:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .evo-item img {
+            width: 70px;
+        }
         .evo-arrow {
             font-size: 1.5rem;
             color: var(--accent-color);
-            font-weight: bold;
-        }
-
-        .location-item {
-            background: #0b0b0e;
-            padding: 12px 18px;
-            border-left: 4px solid var(--gba-green);
-            margin-bottom: 8px;
-            border-radius: 4px;
-            font-size: 0.9rem;
         }
 
         footer {
-            padding: 60px 0;
-            background: #050507;
-            border-top: 1px solid #222;
+            padding: 50px 0;
             text-align: center;
-            margin-top: 80px;
-        }
-
-        .version-tag {
-            font-size: 0.7rem;
-            background: #444;
-            padding: 2px 8px;
-            border-radius: 4px;
-            vertical-align: middle;
+            font-size: 0.8rem;
+            opacity: 0.6;
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
+    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <span style="color: var(--accent-color);">POKÉ</span>DEX <span class="text-white opacity-50">GBA</span>
+                <span style="color: var(--accent-color);">POKÉ</span>DEX GBA
             </a>
-            <div class="ms-auto d-flex align-items-center">
-                <span class="badge bg-danger me-2">LIVE API READY</span>
-            </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero-section">
         <div class="container">
-            <h1 class="display-3 fw-bold mb-2">Database GBA Master</h1>
-            <p class="lead text-secondary">A enciclopédia definitiva para FireRed, LeafGreen, Ruby, Sapphire e Emerald.</p>
+            <h1 class="display-4 fw-bold">Database GBA Master</h1>
+            <p class="lead opacity-75">Design Original • Analytics Avançado</p>
         </div>
     </section>
 
-    <main class="container">
-        <!-- Seção de Filtros -->
-        <section id="filters" class="filter-box">
-            <div class="row g-4">
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label text-uppercase small fw-bold text-secondary">Geração Original</label>
+    <div class="container">
+        <!-- Filters Area -->
+        <div class="filter-box">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label small text-secondary fw-bold">GERAÇÃO</label>
                     <select id="genFilter" class="form-select">
-                        <option value="all">Todas as Gerações</option>
-                        <option value="1">Geração I (Kanto)</option>
-                        <option value="2">Geração II (Johto)</option>
-                        <option value="3">Geração III (Hoenn)</option>
+                        <option value="all">Todas</option>
+                        <option value="1">Gen I</option>
+                        <option value="2">Gen II</option>
+                        <option value="3">Gen III</option>
                     </select>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label text-uppercase small fw-bold text-secondary">Filtrar por Jogo GBA</label>
+                <div class="col-md-2">
+                    <label class="form-label small text-secondary fw-bold">JOGO GBA</label>
                     <select id="gameFilter" class="form-select">
-                        <option value="all">Qualquer Jogo</option>
+                        <option value="all">Qualquer</option>
                         <option value="frlg">FireRed / LeafGreen</option>
                         <option value="rse">Ruby / Sapphire / Emerald</option>
                     </select>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label text-uppercase small fw-bold text-secondary">Tipo Elemental</label>
+                <div class="col-md-3">
+                    <label class="form-label small text-secondary fw-bold">TIPO ELEMENTAL</label>
                     <select id="typeFilter" class="form-select">
                         <option value="all">Todos os Tipos</option>
+                        <option value="normal">Normal</option>
                         <option value="fire">Fogo</option>
                         <option value="water">Água</option>
                         <option value="grass">Planta</option>
                         <option value="electric">Elétrico</option>
+                        <option value="ice">Gelo</option>
+                        <option value="fighting">Lutador</option>
+                        <option value="poison">Veneno</option>
+                        <option value="ground">Terra</option>
+                        <option value="flying">Voador</option>
                         <option value="psychic">Psíquico</option>
+                        <option value="bug">Inseto</option>
+                        <option value="rock">Rocha</option>
+                        <option value="ghost">Fantasma</option>
                         <option value="dragon">Dragão</option>
+                        <option value="dark">Sombrio</option>
+                        <option value="steel">Aço</option>
+                        <option value="fairy">Fada</option>
                     </select>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label text-uppercase small fw-bold text-secondary">Busca Rápida</label>
-                    <input type="text" id="searchInput" class="form-control" placeholder="Ex: Rayquaza...">
+                <div class="col-md-3">
+                    <label class="form-label small text-secondary fw-bold">PESQUISAR</label>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Nome ou ID...">
+                </div>
+                <div class="col-md-2 d-grid">
+                    <label class="form-label d-none d-md-block">&nbsp;</label>
+                    <button class="btn btn-confirm" onclick="triggerSearch()">
+                        <i class="fa-solid fa-check-circle me-2"></i> CONSULTAR
+                    </button>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- Grid de Resultados -->
-        <div class="row" id="pokedexGrid">
-            <!-- Card Exemplo: Charizard (Glow Fire) -->
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="poke-card glow-fire" data-bs-toggle="modal" data-bs-target="#pokeDetailModal">
+        <!-- Grid -->
+        <div class="row" id="pokedexContainer">
+            <!-- Exemplo Charizard -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="poke-card glow-fire" onclick="openPokeDetails(6)">
                     <div class="card-img-container">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png" class="poke-img" alt="Charizard">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png" class="poke-img">
                     </div>
                     <div class="card-info">
-                        <span class="text-secondary fw-bold small">#0006</span>
-                        <h3 class="h4 my-2">Charizard</h3>
-                        <div>
+                        <span class="text-secondary small fw-bold">#0006</span>
+                        <h3 class="h5">Charizard</h3>
+                        <div class="mt-2">
                             <span class="type-badge" style="background-color: var(--fire);">Fogo</span>
                             <span class="type-badge" style="background-color: var(--flying);">Voador</span>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Card Exemplo: Gardevoir (Glow Psychic) -->
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="poke-card glow-psychic">
+            
+            <!-- Exemplo Rayquaza -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="poke-card glow-dragon" onclick="openPokeDetails(384)">
                     <div class="card-img-container">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/282.png" class="poke-img" alt="Gardevoir">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/384.png" class="poke-img">
                     </div>
                     <div class="card-info">
-                        <span class="text-secondary fw-bold small">#0282</span>
-                        <h3 class="h4 my-2">Gardevoir</h3>
-                        <div>
-                            <span class="type-badge" style="background-color: var(--psychic);">Psíquico</span>
-                            <span class="type-badge" style="background-color: var(--fairy);">Fada</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card Exemplo: Kyogre (Glow Water) -->
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="poke-card glow-water">
-                    <div class="card-img-container">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/382.png" class="poke-img" alt="Kyogre">
-                    </div>
-                    <div class="card-info">
-                        <span class="text-secondary fw-bold small">#0382</span>
-                        <h3 class="h4 my-2">Kyogre</h3>
-                        <div>
-                            <span class="type-badge" style="background-color: var(--water);">Água</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Modal de Detalhes -->
-    <div class="modal fade" id="pokeDetailModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold">DETALHES DO POKÉMON</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-5 text-center mb-4 mb-md-0">
-                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png" class="img-fluid" style="max-width: 280px;">
-                            <div class="mt-3">
-                                <span class="type-badge" style="background-color: var(--fire);">Fogo</span>
-                                <span class="type-badge" style="background-color: var(--flying);">Voador</span>
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <h2 class="display-6 fw-bold">Charizard <span class="version-tag">GEN I</span></h2>
-                            <p class="text-secondary italic mb-4">"Um Pokémon que voa orgulhosamente pelos céus em busca de oponentes poderosos."</p>
-                            
-                            <h6 class="text-uppercase fw-bold text-danger mb-3">Onde encontrar no GBA:</h6>
-                            <div class="location-item">FireRed: Evolução do Charmeleon (Inicial de Kanto)</div>
-                            <div class="location-item">LeafGreen: Evolução do Charmeleon (Inicial de Kanto)</div>
-                            <div class="location-item">Emerald: Somente via Troca</div>
-
-                            <h6 class="text-uppercase fw-bold text-warning mt-4 mb-3">Cadeia Evolutiva:</h6>
-                            <div class="evo-chain">
-                                <div class="text-center">
-                                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png" width="50">
-                                    <p class="small m-0">Charmander</p>
-                                </div>
-                                <div class="evo-arrow">→</div>
-                                <div class="text-center">
-                                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/5.png" width="50">
-                                    <p class="small m-0">Lvl 16</p>
-                                </div>
-                                <div class="evo-arrow">→</div>
-                                <div class="text-center">
-                                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png" width="50">
-                                    <p class="small m-0">Lvl 36</p>
-                                </div>
-                            </div>
+                        <span class="text-secondary small fw-bold">#0384</span>
+                        <h3 class="h5">Rayquaza</h3>
+                        <div class="mt-2">
+                            <span class="type-badge" style="background-color: var(--dragon);">Dragão</span>
+                            <span class="type-badge" style="background-color: var(--flying);">Voador</span>
                         </div>
                     </div>
                 </div>
@@ -361,38 +335,121 @@
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p class="text-secondary small mb-1">Este projeto é uma ferramenta de consulta para jogos clássicos de Game Boy Advance.</p>
-            <p class="text-white-50 small">&copy; 2026 PokéDex GBA Master Interface. Powered by PokéAPI.</p>
+    <!-- Modal Analítico -->
+    <div class="modal fade" id="pokeDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" id="modalContentArea">
+                <!-- Conteúdo injetado via JS -->
+            </div>
         </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 PokéDex GBA Master. Dados via PokéAPI.</p>
     </footer>
 
-    <!-- Scripts: Bootstrap & Custom JS -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        // Placeholder para futura integração de API
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('searchInput');
-            const genFilter = document.getElementById('genFilter');
-            const typeFilter = document.getElementById('typeFilter');
-
-            // Função de exemplo para aplicar brilho dinâmico baseado no tipo
-            function applyTypeStyles() {
-                console.log("Sistema de cores dinâmicas carregado.");
+        // Simulação de Dados para o Modal
+        const mockData = {
+            6: {
+                id: "0006", name: "Charizard",
+                img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
+                types: [{name:"Fogo", color:"--fire"}, {name:"Voador", color:"--flying"}],
+                stats: {hp: 78, atk: 84, def: 78, spa: 109, spd: 85, spe: 100},
+                evoChain: [{id: 4, name: "Charmander"}, {id: 5, name: "Charmeleon"}, {id: 6, name: "Charizard"}]
+            },
+            384: {
+                id: "0384", name: "Rayquaza",
+                img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/384.png",
+                types: [{name:"Dragão", color:"--dragon"}, {name:"Voador", color:"--flying"}],
+                stats: {hp: 105, atk: 150, def: 90, spa: 150, spd: 90, spe: 95},
+                evoChain: [{id: 384, name: "Rayquaza"}]
             }
+        };
 
-            // Ouvintes de evento para os filtros (Lógica será conectada à API depois)
-            searchInput.addEventListener('input', (e) => {
-                console.log("Buscando por:", e.target.value);
-            });
+        const modal = new bootstrap.Modal(document.getElementById('pokeDetailModal'));
 
-            genFilter.addEventListener('change', (e) => {
-                console.log("Filtrando Geração:", e.target.value);
-            });
+        function openPokeDetails(id) {
+            const poke = mockData[id];
+            if(!poke) return;
 
-            applyTypeStyles();
-        });
+            const content = `
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="row align-items-center">
+                        <div class="col-md-5 text-center">
+                            <img src="${poke.img}" class="img-fluid mb-3" style="max-height: 300px;">
+                            <h2 class="fw-bold">${poke.name}</h2>
+                            <div class="mb-3">
+                                ${poke.types.map(t => `<span class="type-badge" style="background-color: var(${t.color});">${t.name}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <h5 class="text-uppercase small fw-bold text-secondary mb-4">Base Stats (GBA)</h5>
+                            ${renderStat("HP", poke.stats.hp)}
+                            ${renderStat("Ataque", poke.stats.atk)}
+                            ${renderStat("Defesa", poke.stats.def)}
+                            ${renderStat("Sp. Ataque", poke.stats.spa)}
+                            ${renderStat("Sp. Defesa", poke.stats.spd)}
+                            ${renderStat("Velocidade", poke.stats.spe)}
+                        </div>
+                    </div>
+
+                    <div class="evo-cycle-container">
+                        <h6 class="text-uppercase small fw-bold text-secondary mb-3 text-center">Ciclo Evolutivo (Clique para navegar)</h6>
+                        <div class="d-flex justify-content-center align-items-center gap-3">
+                            ${poke.evoChain.map((evo, i) => `
+                                <div class="evo-item" onclick="changePoke(${evo.id})">
+                                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evo.id}.png">
+                                    <div class="small fw-bold">${evo.name}</div>
+                                </div>
+                                ${i < poke.evoChain.length - 1 ? '<div class="evo-arrow">→</div>' : ''}
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalContentArea').innerHTML = content;
+            modal.show();
+
+            // Animar as barras
+            setTimeout(() => {
+                const bars = document.querySelectorAll('.stat-bar-fill');
+                bars.forEach(bar => {
+                    const val = bar.getAttribute('data-val');
+                    bar.style.width = (val / 255 * 100) + '%';
+                });
+            }, 100);
+        }
+
+        function renderStat(label, val) {
+            return `
+                <div class="stat-row">
+                    <div class="stat-label"><span>${label}</span> <span>${val}</span></div>
+                    <div class="stat-bar-bg"><div class="stat-bar-fill" data-val="${val}"></div></div>
+                </div>
+            `;
+        }
+
+        function changePoke(id) {
+            if(mockData[id]) {
+                modal.hide();
+                setTimeout(() => openPokeDetails(id), 400);
+            } else {
+                alert("Dados de evolução seriam carregados via API!");
+            }
+        }
+
+        function triggerSearch() {
+            const name = document.getElementById('searchInput').value;
+            const type = document.getElementById('typeFilter').value;
+            alert("Consulta Iniciada! Buscando: " + (name || "Todos") + " | Tipo: " + type);
+        }
     </script>
 </body>
 </html>
