@@ -1,0 +1,11 @@
+name: CI de Integração
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Rodar Teste de Conexão API
+        run: node integration.test.js
+      
