@@ -37,16 +37,6 @@ Entrega intermediária de Bootcamp II.
   <li>✅ <strong>Deploy:</strong> Publicação oficial via GitHub Pages.</li>
 </ul>
 
-<h2>⚙️ Como executar localmente</h2>
-<pre>
-# 1. Clone o repositório
-git clone https://github.com/pxmarco/Etapa-intermediaria.git
-
-# 2. Acesse a pasta e abra o index.html no navegador
-
-# 3. Para rodar o teste de integração
-node integration.test.js
-</pre>
 
 <hr>
 
