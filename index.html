@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PokéDex GBA Master - Dark Edition</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -17,7 +14,6 @@
             --accent-color: #ff1f1f;
             --text-main: #e0e0e0;
             --gba-green: #2ecc71;
-            
             /* Pokemon Type Colors */
             --normal: #A8A77A; --fire: #EE8130; --water: #6390F0; --electric: #F7D02C;
             --grass: #7AC74C; --ice: #96D9D6; --fighting: #C22E28; --poison: #A33EA1;
@@ -25,213 +21,51 @@
             --rock: #B6A136; --ghost: #735797; --dragon: #6F35FC; --dark: #705746;
             --steel: #B7B7CE; --fairy: #D685AD;
         }
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Roboto', sans-serif; overflow-x: hidden; }
+        h1, h2, h3, .navbar-brand { font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 2px; }
+        .navbar { background-color: rgba(11, 11, 14, 0.95); border-bottom: 2px solid var(--accent-color); backdrop-filter: blur(10px); }
+        .hero-section { padding: 100px 0 50px; background: linear-gradient(180deg, rgba(255,31,31,0.1) 0%, rgba(11,11,14,1) 100%); text-align: center; }
+        .filter-box { background: var(--card-bg); border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 40px; border: 1px solid #2a2a35; }
+        .form-select, .form-control { background-color: #0b0b0e; border: 1px solid #333; color: white; transition: all 0.3s; }
+        .form-select:focus, .form-control:focus { background-color: #1a1a24; border-color: var(--accent-color); color: white; box-shadow: 0 0 10px rgba(255, 31, 31, 0.3); }
+        .btn-confirm { background: var(--accent-color); border: none; color: white; font-weight: bold; text-transform: uppercase; height: 100%; border-radius: 8px; transition: 0.3s; }
+        .btn-confirm:hover { background: #cc1919; box-shadow: 0 0 15px rgba(255, 31, 31, 0.5); }
+        .poke-card { background: var(--card-bg); border-radius: 20px; overflow: hidden; position: relative; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s; cursor: pointer; margin-bottom: 30px; border: 1px solid #2a2a35; }
+        .poke-card:hover { transform: translateY(-10px); box-shadow: 0 15px 45px rgba(0,0,0,0.7); }
+        .card-img-container { height: 180px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 70%); }
+        .poke-img { width: 130px; z-index: 2; transition: 0.3s; }
+        .poke-card:hover .poke-img { transform: scale(1.1); }
+        .card-info { padding: 20px; text-align: center; }
+        .type-badge { padding: 4px 10px; border-radius: 5px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin: 2px; display: inline-block; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        
+        /* Efeitos Dinâmicos (Glows) */
+        .glow-fire { border-bottom: 4px solid var(--fire); } .glow-water { border-bottom: 4px solid var(--water); }
+        .glow-grass { border-bottom: 4px solid var(--grass); } .glow-electric { border-bottom: 4px solid var(--electric); }
+        .glow-psychic { border-bottom: 4px solid var(--psychic); } .glow-dragon { border-bottom: 4px solid var(--dragon); }
+        .glow-ice { border-bottom: 4px solid var(--ice); } .glow-fighting { border-bottom: 4px solid var(--fighting); }
+        .glow-poison { border-bottom: 4px solid var(--poison); } .glow-ground { border-bottom: 4px solid var(--ground); }
+        .glow-flying { border-bottom: 4px solid var(--flying); } .glow-bug { border-bottom: 4px solid var(--bug); }
+        .glow-rock { border-bottom: 4px solid var(--rock); } .glow-ghost { border-bottom: 4px solid var(--ghost); }
+        .glow-dark { border-bottom: 4px solid var(--dark); } .glow-steel { border-bottom: 4px solid var(--steel); }
+        .glow-fairy { border-bottom: 4px solid var(--fairy); } .glow-normal { border-bottom: 4px solid var(--normal); }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Roboto', sans-serif;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, .navbar-brand {
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* Navbar */
-        .navbar {
-            background-color: rgba(11, 11, 14, 0.95);
-            border-bottom: 2px solid var(--accent-color);
-            backdrop-filter: blur(10px);
-        }
-
-        /* Hero Section */
-        .hero-section {
-            padding: 100px 0 50px;
-            background: linear-gradient(180deg, rgba(255,31,31,0.1) 0%, rgba(11,11,14,1) 100%);
-            text-align: center;
-        }
-
-        /* Filters Section */
-        .filter-box {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            margin-bottom: 40px;
-            border: 1px solid #2a2a35;
-        }
-
-        .form-select, .form-control {
-            background-color: #0b0b0e;
-            border: 1px solid #333;
-            color: white;
-            transition: all 0.3s;
-        }
-
-        .form-select:focus, .form-control:focus {
-            background-color: #1a1a24;
-            border-color: var(--accent-color);
-            color: white;
-            box-shadow: 0 0 10px rgba(255, 31, 31, 0.3);
-        }
-
-        .btn-confirm {
-            background: var(--accent-color);
-            border: none;
-            color: white;
-            font-weight: bold;
-            text-transform: uppercase;
-            height: 100%;
-            border-radius: 8px;
-            transition: 0.3s;
-        }
-
-        .btn-confirm:hover {
-            background: #cc1919;
-            box-shadow: 0 0 15px rgba(255, 31, 31, 0.5);
-        }
-
-        /* Pokemon Card */
-        .poke-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
-            cursor: pointer;
-            margin-bottom: 30px;
-            border: 1px solid #2a2a35;
-        }
-
-        .poke-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 45px rgba(0,0,0,0.7);
-        }
-
-        .card-img-container {
-            height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 70%);
-        }
-
-        .poke-img {
-            width: 130px;
-            z-index: 2;
-            transition: 0.3s;
-        }
-
-        .poke-card:hover .poke-img {
-            transform: scale(1.1);
-        }
-
-        .card-info {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .type-badge {
-            padding: 4px 10px;
-            border-radius: 5px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin: 2px;
-            display: inline-block;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
-        /* Efeitos Dinâmicos de Borda */
-        .glow-fire { border-bottom: 4px solid var(--fire); }
-        .glow-water { border-bottom: 4px solid var(--water); }
-        .glow-grass { border-bottom: 4px solid var(--grass); }
-        .glow-electric { border-bottom: 4px solid var(--electric); }
-        .glow-psychic { border-bottom: 4px solid var(--psychic); }
-        .glow-dragon { border-bottom: 4px solid var(--dragon); }
-
-        /* Modal Customization (Popup Analítico) */
-        .modal-content {
-            background-color: var(--card-bg);
-            color: white;
-            border: 1px solid #444;
-            border-radius: 25px;
-        }
-
-        /* Gráficos de Status */
-        .stat-row {
-            margin-bottom: 10px;
-        }
-        .stat-label {
-            font-size: 0.8rem;
-            color: #aaa;
-            text-transform: uppercase;
-            display: flex;
-            justify-content: space-between;
-        }
-        .stat-bar-bg {
-            background: #0b0b0e;
-            height: 10px;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-top: 4px;
-        }
-        .stat-bar-fill {
-            height: 100%;
-            background: var(--accent-color);
-            border-radius: 5px;
-            width: 0;
-            transition: width 1s ease-in-out;
-        }
-
-        /* Cadeia Evolutiva Clicável */
-        .evo-cycle-container {
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        .evo-item {
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-            padding: 10px;
-            border-radius: 15px;
-        }
-        .evo-item:hover {
-            background: rgba(255,255,255,0.05);
-        }
-        .evo-item img {
-            width: 70px;
-        }
-        .evo-arrow {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-        }
-
-        footer {
-            padding: 50px 0;
-            text-align: center;
-            font-size: 0.8rem;
-            opacity: 0.6;
-        }
+        .modal-content { background-color: var(--card-bg); color: white; border: 1px solid #444; border-radius: 25px; }
+        .stat-row { margin-bottom: 10px; }
+        .stat-label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; display: flex; justify-content: space-between; }
+        .stat-bar-bg { background: #0b0b0e; height: 10px; border-radius: 5px; overflow: hidden; margin-top: 4px; }
+        .stat-bar-fill { height: 100%; background: var(--accent-color); border-radius: 5px; width: 0; transition: width 1s ease-in-out; }
+        .evo-cycle-container { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; margin-top: 20px; }
+        footer { padding: 50px 0; text-align: center; font-size: 0.8rem; opacity: 0.6; }
     </style>
 </head>
 <body>
 
-    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <span style="color: var(--accent-color);">POKÉ</span>DEX GBA
-            </a>
+            <a class="navbar-brand" href="#"><span style="color: var(--accent-color);">POKÉ</span>DEX GBA</a>
         </div>
     </nav>
 
-    <!-- Hero -->
     <section class="hero-section">
         <div class="container">
             <h1 class="display-4 fw-bold">Database GBA Master</h1>
@@ -240,7 +74,6 @@
     </section>
 
     <div class="container">
-        <!-- Filters Area -->
         <div class="filter-box">
             <div class="row g-3">
                 <div class="col-md-2">
@@ -297,50 +130,12 @@
             </div>
         </div>
 
-        <!-- Grid -->
-        <div class="row" id="pokedexContainer">
-            <!-- Exemplo Charizard -->
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <div class="poke-card glow-fire" onclick="openPokeDetails(6)">
-                    <div class="card-img-container">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png" class="poke-img">
-                    </div>
-                    <div class="card-info">
-                        <span class="text-secondary small fw-bold">#0006</span>
-                        <h3 class="h5">Charizard</h3>
-                        <div class="mt-2">
-                            <span class="type-badge" style="background-color: var(--fire);">Fogo</span>
-                            <span class="type-badge" style="background-color: var(--flying);">Voador</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Exemplo Rayquaza -->
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <div class="poke-card glow-dragon" onclick="openPokeDetails(384)">
-                    <div class="card-img-container">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/384.png" class="poke-img">
-                    </div>
-                    <div class="card-info">
-                        <span class="text-secondary small fw-bold">#0384</span>
-                        <h3 class="h5">Rayquaza</h3>
-                        <div class="mt-2">
-                            <span class="type-badge" style="background-color: var(--dragon);">Dragão</span>
-                            <span class="type-badge" style="background-color: var(--flying);">Voador</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="row" id="pokedexContainer"></div>
     </div>
 
-    <!-- Modal Analítico -->
     <div class="modal fade" id="pokeDetailModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content" id="modalContentArea">
-                <!-- Conteúdo injetado via JS -->
-            </div>
+            <div class="modal-content" id="modalContentArea"></div>
         </div>
     </div>
 
@@ -348,108 +143,7 @@
         <p>&copy; 2026 PokéDex GBA Master. Dados via PokéAPI.</p>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // Simulação de Dados para o Modal
-        const mockData = {
-            6: {
-                id: "0006", name: "Charizard",
-                img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
-                types: [{name:"Fogo", color:"--fire"}, {name:"Voador", color:"--flying"}],
-                stats: {hp: 78, atk: 84, def: 78, spa: 109, spd: 85, spe: 100},
-                evoChain: [{id: 4, name: "Charmander"}, {id: 5, name: "Charmeleon"}, {id: 6, name: "Charizard"}]
-            },
-            384: {
-                id: "0384", name: "Rayquaza",
-                img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/384.png",
-                types: [{name:"Dragão", color:"--dragon"}, {name:"Voador", color:"--flying"}],
-                stats: {hp: 105, atk: 150, def: 90, spa: 150, spd: 90, spe: 95},
-                evoChain: [{id: 384, name: "Rayquaza"}]
-            }
-        };
-
-        const modal = new bootstrap.Modal(document.getElementById('pokeDetailModal'));
-
-        function openPokeDetails(id) {
-            const poke = mockData[id];
-            if(!poke) return;
-
-            const content = `
-                <div class="modal-header border-0">
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body pt-0">
-                    <div class="row align-items-center">
-                        <div class="col-md-5 text-center">
-                            <img src="${poke.img}" class="img-fluid mb-3" style="max-height: 300px;">
-                            <h2 class="fw-bold">${poke.name}</h2>
-                            <div class="mb-3">
-                                ${poke.types.map(t => `<span class="type-badge" style="background-color: var(${t.color});">${t.name}</span>`).join('')}
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <h5 class="text-uppercase small fw-bold text-secondary mb-4">Base Stats (GBA)</h5>
-                            ${renderStat("HP", poke.stats.hp)}
-                            ${renderStat("Ataque", poke.stats.atk)}
-                            ${renderStat("Defesa", poke.stats.def)}
-                            ${renderStat("Sp. Ataque", poke.stats.spa)}
-                            ${renderStat("Sp. Defesa", poke.stats.spd)}
-                            ${renderStat("Velocidade", poke.stats.spe)}
-                        </div>
-                    </div>
-
-                    <div class="evo-cycle-container">
-                        <h6 class="text-uppercase small fw-bold text-secondary mb-3 text-center">Ciclo Evolutivo (Clique para navegar)</h6>
-                        <div class="d-flex justify-content-center align-items-center gap-3">
-                            ${poke.evoChain.map((evo, i) => `
-                                <div class="evo-item" onclick="changePoke(${evo.id})">
-                                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evo.id}.png">
-                                    <div class="small fw-bold">${evo.name}</div>
-                                </div>
-                                ${i < poke.evoChain.length - 1 ? '<div class="evo-arrow">→</div>' : ''}
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('modalContentArea').innerHTML = content;
-            modal.show();
-
-            // Animar as barras
-            setTimeout(() => {
-                const bars = document.querySelectorAll('.stat-bar-fill');
-                bars.forEach(bar => {
-                    const val = bar.getAttribute('data-val');
-                    bar.style.width = (val / 255 * 100) + '%';
-                });
-            }, 100);
-        }
-
-        function renderStat(label, val) {
-            return `
-                <div class="stat-row">
-                    <div class="stat-label"><span>${label}</span> <span>${val}</span></div>
-                    <div class="stat-bar-bg"><div class="stat-bar-fill" data-val="${val}"></div></div>
-                </div>
-            `;
-        }
-
-        function changePoke(id) {
-            if(mockData[id]) {
-                modal.hide();
-                setTimeout(() => openPokeDetails(id), 400);
-            } else {
-                alert("Dados de evolução seriam carregados via API!");
-            }
-        }
-
-        function triggerSearch() {
-            const name = document.getElementById('searchInput').value;
-            const type = document.getElementById('typeFilter').value;
-            alert("Consulta Iniciada! Buscando: " + (name || "Todos") + " | Tipo: " + type);
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
