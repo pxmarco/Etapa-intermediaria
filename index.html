@@ -3,278 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PokéDex GBA Master - Ultimate Edition</title>
-    
+    <title>PokéDex GBA Master</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-
     <style>
         :root {
-            --bg-dark: #09090b;
-            --card-bg: #18181b;
-            --accent-red: #ff1f1f;
-            --text-main: #f4f4f5;
-            --border-color: #27272a;
-            
-            /* Pokemon Type Palette */
-            --normal: #A8A77A; --fire: #EE8130; --water: #6390F0; --electric: #F7D02C;
-            --grass: #7AC74C; --ice: #96D9D6; --fighting: #C22E28; --poison: #A33EA1;
-            --ground: #E2BF65; --flying: #A98FF3; --psychic: #F95587; --bug: #A6B91A;
-            --rock: #B6A136; --ghost: #735797; --dragon: #6F35FC; --dark: #705746;
-            --steel: #B7B7CE; --fairy: #D685AD;
+            --bg-dark: #0b0b0e; --card-bg: #16161d; --accent: #ff1f1f; --text: #e0e0e0;
+            --fire: #EE8130; --water: #6390F0; --grass: #7AC74C; --electric: #F7D02C;
+            --ice: #96D9D6; --fighting: #C22E28; --poison: #A33EA1; --ground: #E2BF65;
+            --flying: #A98FF3; --psychic: #F95587; --bug: #A6B91A; --rock: #B6A136;
+            --ghost: #735797; --dragon: #6F35FC; --dark: #705746; --steel: #B7B7CE;
+            --fairy: #D685AD; --normal: #A8A77A;
         }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            overflow-x: hidden;
+        body { background: var(--bg-dark); color: var(--text); font-family: 'Roboto', sans-serif; }
+        .filter-box { background: var(--card-bg); border-radius: 15px; padding: 20px; border: 1px solid #2a2a35; margin-top: 100px; }
+        .form-control, .form-select { background: #0b0b0e; border: 1px solid #333; color: #fff; }
+        .poke-card { 
+            background: var(--card-bg); border-radius: 15px; padding: 15px; transition: 0.3s; 
+            cursor: pointer; border: 1px solid #222; text-align: center; height: 100%;
         }
-
-        h1, h2, h3, .navbar-brand {
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        /* Navbar Custom */
-        .navbar {
-            background-color: rgba(9, 9, 11, 0.9);
-            border-bottom: 1px solid var(--border-color);
-            backdrop-filter: blur(12px);
-            padding: 1rem 0;
-        }
-
-        /* Hero */
-        .hero-section {
-            padding: 120px 0 40px;
-            background: radial-gradient(circle at top, rgba(255, 31, 31, 0.08) 0%, transparent 70%);
-            text-align: center;
-        }
-
-        /* Painel de Filtros */
-        .filter-box {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 24px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 40px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-
-        .form-select, .form-control {
-            background-color: #09090b;
-            border: 1px solid var(--border-color);
-            color: white;
-            padding: 0.6rem 1rem;
-            font-size: 0.9rem;
-        }
-
-        .form-select:focus, .form-control:focus {
-            border-color: var(--accent-red);
-            background-color: #111114;
-            color: white;
-            box-shadow: 0 0 0 2px rgba(255, 31, 31, 0.2);
-        }
-
-        /* Botão Consultar */
-        .btn-confirm {
-            background-color: var(--accent-red);
-            color: white;
-            font-weight: 700;
-            border: none;
-            border-radius: 8px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-        }
-
-        .btn-confirm:hover {
-            background-color: #ff4d4d;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 31, 31, 0.4);
-        }
-
-        /* Pokemon Card */
-        .poke-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .poke-card:hover {
-            border-color: rgba(255,255,255,0.2);
-            transform: translateY(-8px);
-            background: #202024;
-        }
-
-        .card-img-wrapper {
-            height: 140px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 80%);
-            margin-bottom: 15px;
-        }
-
-        .poke-img {
-            width: 110px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
-            transition: transform 0.3s ease;
-        }
-
-        .poke-card:hover .poke-img {
-            transform: scale(1.1) rotate(3deg);
-        }
-
-        .type-badge {
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            padding: 4px 10px;
-            border-radius: 6px;
-            margin: 2px;
-            color: white;
-            display: inline-block;
-        }
-
-        /* Modal Analítico */
-        .modal-content {
-            background-color: #0c0c0e;
-            color: white;
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-        }
-
-        .stat-row { margin-bottom: 12px; }
-        .stat-label { font-size: 11px; color: #a1a1aa; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; display: flex; justify-content: space-between; }
-        .stat-bar-bg { background: #1f1f23; height: 6px; border-radius: 3px; overflow: hidden; }
-        .stat-bar-fill { height: 100%; background: var(--accent-red); transition: width 1s ease-out; }
-
-        .evo-container {
-            background: #111114;
-            border-radius: 16px;
-            padding: 20px;
-            margin-top: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        .evo-item {
-            cursor: pointer;
-            text-align: center;
-            border-radius: 12px;
-            padding: 8px;
-            transition: background 0.2s;
-        }
-
-        .evo-item:hover { background: rgba(255,255,255,0.05); }
-        .evo-item img { width: 64px; }
-
-        footer {
-            padding: 60px 0;
-            text-align: center;
-            border-top: 1px solid var(--border-color);
-            margin-top: 80px;
-            color: #71717a;
-            font-size: 0.8rem;
-        }
-
-        /* Glow effects for types */
-        .glow-fire { border-bottom: 4px solid var(--fire); }
-        .glow-water { border-bottom: 4px solid var(--water); }
-        .glow-grass { border-bottom: 4px solid var(--grass); }
-        .glow-electric { border-bottom: 4px solid var(--electric); }
-        /* Add others dynamically in JS */
+        .poke-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .poke-img { width: 100px; height: 100px; object-fit: contain; }
+        .type-badge { padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; color: #fff; margin: 2px; display: inline-block; }
+        .modal-content { background: var(--card-bg); color: #fff; border-radius: 20px; border: 1px solid #444; }
+        .stat-bar { background: #333; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 10px; }
+        .stat-fill { background: var(--accent); height: 100%; transition: width 1s; }
+        .evo-item { cursor: pointer; padding: 10px; border-radius: 10px; transition: 0.2s; }
+        .evo-item:hover { background: rgba(255,255,255,0.1); }
+        /* Glow classes */
+        .glow-fire { border-bottom: 3px solid var(--fire); } .glow-water { border-bottom: 3px solid var(--water); }
+        .glow-grass { border-bottom: 3px solid var(--grass); } .glow-electric { border-bottom: 3px solid var(--electric); }
     </style>
 </head>
 <body>
-
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <span style="color: var(--accent-red); font-weight: 700;">POKÉ</span>DEX <span class="fw-light">GBA</span>
-            </a>
-        </div>
+    <nav class="navbar navbar-dark fixed-top bg-dark border-bottom border-danger">
+        <div class="container"><a class="navbar-brand fw-bold" href="#">POKÉDEX GBA</a></div>
     </nav>
 
-    <section class="hero-section">
-        <div class="container">
-            <h1 class="display-4 fw-bold">Database GBA Pro</h1>
-            <p class="text-secondary lead">Integração oficial PokéAPI para Kanto, Johto e Hoenn.</p>
-        </div>
-    </section>
-
-    <main class="container">
-        <section class="filter-box">
-            <div class="row g-3">
-                <div class="col-md-2">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">Geração</label>
+    <div class="container">
+        <div class="filter-box">
+            <div class="row g-2">
+                <div class="col-md-3">
                     <select id="genFilter" class="form-select">
-                        <option value="1">Kanto (Gen I)</option>
-                        <option value="2">Johto (Gen II)</option>
-                        <option value="3">Hoenn (Gen III)</option>
+                        <option value="1">Kanto (FireRed/LeafGreen)</option>
+                        <option value="2">Johto (Gold/Silver GBA)</option>
+                        <option value="3">Hoenn (Ruby/Sapphire/Emerald)</option>
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">Elemento</label>
-                    <select id="typeFilter" class="form-select" style="max-height: 200px;">
+                    <select id="typeFilter" class="form-select">
                         <option value="all">Todos os Tipos</option>
-                        <option value="normal">Normal</option>
-                        <option value="fire">Fogo</option>
-                        <option value="water">Água</option>
-                        <option value="grass">Planta</option>
-                        <option value="electric">Elétrico</option>
-                        <option value="ice">Gelo</option>
-                        <option value="fighting">Lutador</option>
-                        <option value="poison">Veneno</option>
-                        <option value="ground">Terra</option>
-                        <option value="flying">Voador</option>
-                        <option value="psychic">Psíquico</option>
-                        <option value="bug">Inseto</option>
-                        <option value="rock">Rocha</option>
-                        <option value="ghost">Fantasma</option>
-                        <option value="dragon">Dragão</option>
-                        <option value="dark">Sombrio</option>
-                        <option value="steel">Aço</option>
-                        <option value="fairy">Fada</option>
+                        <option value="fire">Fogo</option><option value="water">Água</option>
+                        <option value="grass">Planta</option><option value="electric">Elétrico</option>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">Pesquisa Rápida</label>
-                    <input type="text" id="searchInput" class="form-control" placeholder="Ex: Mewtwo ou 150">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Nome ou número...">
                 </div>
-                <div class="col-md-3 d-grid">
-                    <label class="d-none d-md-block">&nbsp;</label>
-                    <button class="btn btn-confirm" id="btnConsultar">
-                        <i class="fa-solid fa-magnifying-glass me-2"></i> Confirmar Consulta
-                    </button>
+                <div class="col-md-2">
+                    <button class="btn btn-danger w-100" onclick="triggerSearch()">CONSULTAR</button>
                 </div>
             </div>
-        </section>
-
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4" id="pokedexContainer">
-            </div>
-    </main>
-
-    <div class="modal fade" id="pokeModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content" id="modalContent">
-                </div>
         </div>
+        <div class="row row-cols-1 row-cols-md-4 g-3 mt-4" id="pokedexContainer"></div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 Master Dex GBA. Dados via PokéAPI Open Source.</p>
-    </footer>
+    <div class="modal fade" id="pokeModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" id="modalBody"></div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
