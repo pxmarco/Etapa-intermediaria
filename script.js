@@ -1,49 +1,44 @@
-// Configurações globais
 const API_URL = "https://pokeapi.co/api/v2/pokemon/";
-const SPECIES_URL = "https://pokeapi.co/api/v2/pokemon-species/";
 
-// Função principal de busca (Acionada pelo botão Consultar)
 async function triggerSearch() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const typeFilter = document.getElementById('typeFilter').value;
     const genFilter = document.getElementById('genFilter').value;
-    
     const container = document.getElementById('pokedexContainer');
+    
     container.innerHTML = '<div class="text-center w-100"><div class="spinner-border text-danger" role="status"></div></div>';
 
     try {
-        // Para uma busca real por nome ou ID
         if (searchTerm) {
-            const pokemon = await fetchPokemonData(searchTerm);
+            const pokemon = await fetch(`${API_URL}${searchTerm}`).then(res => res.json());
             renderCards([pokemon]);
         } else {
-            // Se não houver nome, buscamos uma lista baseada na geração GBA
-            // Gen 1-3 vai até o ID 386 (Deoxys)
-            const list = await fetchPokemonList(genFilter);
-            renderCards(list);
+            let limit = 151, offset = 0;
+            if (genFilter === "2") { limit = 100; offset = 151; }
+            if (genFilter === "3") { limit = 135; offset = 251; }
+            const data = await fetch(`${API_URL}?limit=${limit}&offset=${offset}`).then(res => res.json());
+            const pokemons = await Promise.all(data.results.map(p => fetch(p.url).then(res => res.json())));
+            renderCards(pokemons);
         }
-    } catch (error) {
-        container.innerHTML = `<p class="text-danger">Erro ao buscar dados. Verifique o nome ou conexão.</p>`;
+    } catch (e) {
+        container.innerHTML = '<p class="text-white text-center">Pokémon não encontrado ou erro na API.</p>';
     }
 }
 
-// Busca dados detalhados de um Pokémon específico
-async function fetchPokemonData(idOrName) {
-    const response = await fetch(`${API_URL}${idOrName}`);
-    const data = await response.json();
-    return data;
+function renderCards(pokemons) {
+    const container = document.getElementById('pokedexContainer');
+    container.innerHTML = "";
+    pokemons.forEach(poke => {
+        const card = document.createElement('div');
+        card.className = 'col-xl-3 col-lg-4 col-md-6 mb-4';
+        card.innerHTML = `
+            <div class="poke-card glow-${poke.types[0].type.name}" onclick="openPokeDetails(${poke.id})">
+                <div class="card-img-container"><img src="${poke.sprites.other['official-artwork'].front_default}" class="poke-img"></div>
+                <div class="card-info">
+                    <span class="text-secondary small fw-bold">#${poke.id}</span>
+                    <h3 class="h5 text-capitalize">${poke.name}</h3>
+                </div>
+            </div>`;
+        container.appendChild(card);
+    });
 }
-
-// Busca lista por Geração (Simplificado para o desafio)
-async function fetchPokemonList(gen) {
-    let limit = 151, offset = 0;
-    if (gen === "2") { limit = 100; offset = 151; }
-    if (gen === "3") { limit = 135; offset = 251; }
-    if (gen === "all") { limit = 386; offset = 0; }
-
-    const response = await fetch(`${API_URL}?limit=${limit}&offset=${offset}`);
-    const data = await response.json();
-    
-    // Faz o fetch de cada um da lista para ter os detalhes (tipos/imagens)
-    return Promise.all(data.results.map(p => fetchPokemonData(p.name)));
-}
+// Mantenha as funções openPokeDetails e renderStat que já tínhamos discutido
