@@ -3,77 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PokéDex GBA Master</title>
+    <title>PokéDex GBA Master - Ultimate Edition</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-dark: #0b0b0e; --card-bg: #16161d; --accent: #ff1f1f; --text: #e0e0e0;
+            --bg-dark: #0b0b0e;
+            --card-bg: #16161d;
+            --accent: #ff1f1f;
+            --text: #e0e0e0;
+            --gba-green: #2ecc71;
+            /* Cores dos Tipos */
             --fire: #EE8130; --water: #6390F0; --grass: #7AC74C; --electric: #F7D02C;
             --ice: #96D9D6; --fighting: #C22E28; --poison: #A33EA1; --ground: #E2BF65;
             --flying: #A98FF3; --psychic: #F95587; --bug: #A6B91A; --rock: #B6A136;
             --ghost: #735797; --dragon: #6F35FC; --dark: #705746; --steel: #B7B7CE;
             --fairy: #D685AD; --normal: #A8A77A;
         }
+
         body { background: var(--bg-dark); color: var(--text); font-family: 'Roboto', sans-serif; }
-        .filter-box { background: var(--card-bg); border-radius: 15px; padding: 20px; border: 1px solid #2a2a35; margin-top: 100px; }
-        .form-control, .form-select { background: #0b0b0e; border: 1px solid #333; color: #fff; }
-        .poke-card { 
-            background: var(--card-bg); border-radius: 15px; padding: 15px; transition: 0.3s; 
-            cursor: pointer; border: 1px solid #222; text-align: center; height: 100%;
+        
+        .navbar { background: rgba(0,0,0,0.9); border-bottom: 2px solid var(--accent); }
+        .navbar-brand { font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
+
+        .filter-box { 
+            background: var(--card-bg); 
+            border-radius: 15px; 
+            padding: 25px; 
+            border: 1px solid #2a2a35; 
+            margin-top: 100px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .poke-card:hover { transform: translateY(-5px); border-color: var(--accent); }
-        .poke-img { width: 100px; height: 100px; object-fit: contain; }
-        .type-badge { padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; color: #fff; margin: 2px; display: inline-block; }
-        .modal-content { background: var(--card-bg); color: #fff; border-radius: 20px; border: 1px solid #444; }
-        .stat-bar { background: #333; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 10px; }
-        .stat-fill { background: var(--accent); height: 100%; transition: width 1s; }
-        .evo-item { cursor: pointer; padding: 10px; border-radius: 10px; transition: 0.2s; }
-        .evo-item:hover { background: rgba(255,255,255,0.1); }
-        /* Glow classes */
-        .glow-fire { border-bottom: 3px solid var(--fire); } .glow-water { border-bottom: 3px solid var(--water); }
-        .glow-grass { border-bottom: 3px solid var(--grass); } .glow-electric { border-bottom: 3px solid var(--electric); }
+
+        .form-select, .form-control { background: #0b0b0e; border: 1px solid #333; color: #fff; }
+        .form-select:focus, .form-control:focus { border-color: var(--accent); box-shadow: none; color: white; }
+
+        /* Estilização dos Cards */
+        .poke-card { 
+            background: var(--card-bg); border-radius: 18px; padding: 20px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer; border: 1px solid #222; position: relative; overflow: hidden;
+        }
+        .poke-card:hover { transform: translateY(-8px); border-color: rgba(255,255,255,0.2); background: #1c1c24; }
+        .poke-img { width: 120px; height: 120px; object-fit: contain; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
+
+        .type-badge { 
+            padding: 3px 10px; border-radius: 5px; font-size: 10px; font-weight: 800; 
+            text-transform: uppercase; color: #fff; margin: 2px; display: inline-block; 
+        }
+
+        /* Modal / Pop-up */
+        .modal-content { 
+            background: var(--card-bg); color: #fff; border-radius: 25px; border: 1px solid #444;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+        .modal-header { border-bottom: 1px solid #333; }
+        
+        .stat-bar { background: #000; height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 12px; border: 1px solid #222; }
+        .stat-fill { background: var(--accent); height: 100%; transition: width 1s ease-in-out; }
+
+        .info-panel { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 15px; border-left: 4px solid var(--gba-green); }
+        .cheat-code { font-family: 'Courier New', monospace; background: #000; color: var(--gba-green); padding: 8px; border-radius: 5px; display: block; font-size: 13px; }
+
+        .evo-item { cursor: pointer; padding: 10px; border-radius: 15px; transition: 0.2s; border: 1px solid transparent; }
+        .evo-item:hover { background: rgba(255,255,255,0.05); border-color: #444; }
+        
+        /* Glows de tipos */
+        .glow-fire { border-bottom: 4px solid var(--fire); } .glow-water { border-bottom: 4px solid var(--water); }
+        .glow-grass { border-bottom: 4px solid var(--grass); } .glow-electric { border-bottom: 4px solid var(--electric); }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-dark fixed-top bg-dark border-bottom border-danger">
-        <div class="container"><a class="navbar-brand fw-bold" href="#">POKÉDEX GBA</a></div>
+
+    <nav class="navbar navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <span style="color:var(--accent)">POKÉ</span>DEX GBA <small style="font-size: 9px; opacity: 0.6;">MASTER EDITION</small>
+            </a>
+        </div>
     </nav>
 
     <div class="container">
         <div class="filter-box">
-            <div class="row g-2">
+            <div class="row g-3">
                 <div class="col-md-3">
+                    <label class="small text-secondary fw-bold">GERAÇÃO / JOGO</label>
                     <select id="genFilter" class="form-select">
-                        <option value="1">Kanto (FireRed/LeafGreen)</option>
-                        <option value="2">Johto (Gold/Silver GBA)</option>
-                        <option value="3">Hoenn (Ruby/Sapphire/Emerald)</option>
+                        <option value="all">Todas (GBA Full List)</option>
+                        <option value="1">Kanto (Gen I)</option>
+                        <option value="2">Johto (Gen II)</option>
+                        <option value="3">Hoenn (Gen III)</option>
                     </select>
                 </div>
                 <div class="col-md-3">
+                    <label class="small text-secondary fw-bold">ELEMENTO</label>
                     <select id="typeFilter" class="form-select">
                         <option value="all">Todos os Tipos</option>
-                        <option value="fire">Fogo</option><option value="water">Água</option>
-                        <option value="grass">Planta</option><option value="electric">Elétrico</option>
+                        <option value="fire">Fogo</option>
+                        <option value="water">Água</option>
+                        <option value="grass">Planta</option>
+                        <option value="electric">Elétrico</option>
+                        <option value="psychic">Psíquico</option>
+                        <option value="dragon">Dragão</option>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Nome ou número...">
+                    <label class="small text-secondary fw-bold">BUSCA RÁPIDA</label>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Ex: Charizard ou 006">
                 </div>
-                <div class="col-md-2">
-                    <button class="btn btn-danger w-100" onclick="triggerSearch()">CONSULTAR</button>
+                <div class="col-md-2 d-grid">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-danger fw-bold" onclick="triggerSearch()">
+                        <i class="fas fa-bolt me-1"></i> CONSULTAR
+                    </button>
                 </div>
             </div>
         </div>
-        <div class="row row-cols-1 row-cols-md-4 g-3 mt-4" id="pokedexContainer"></div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mt-4" id="pokedexContainer">
+            </div>
     </div>
 
-    <div class="modal fade" id="pokeModal" tabindex="-1">
+    <div class="modal fade" id="pokeModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content" id="modalBody"></div>
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title font-monospace" style="color:var(--accent)">DADOS TÉCNICOS</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="modalBody">
+                    </div>
+            </div>
         </div>
     </div>
+
+    <footer class="text-center py-5 opacity-25">
+        <small>Powered by PokéAPI & GBA Database</small>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
