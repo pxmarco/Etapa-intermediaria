@@ -478,58 +478,124 @@ function readFilters() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   DATA LOADING — fetch todos os 386 em paralelo (batchado)
+   DATA LOADING
+   Estratégia: carrega só lista básica (1 request) → renderiza
+   imediatamente com sprites estáticos por ID. Detalhes (tipos,
+   stats) são buscados em background em batches pequenos e os
+   cards são atualizados conforme chegam.
 ══════════════════════════════════════════════════════════════ */
+
+// Mapa de nome → dados completos (preenchido em background)
+const detailCache = {};
+
 async function loadAllPokemon() {
-    showLoader("CARREGANDO 386 POKÉMON...");
+    showLoader("CARREGANDO...");
 
-    // Pega lista básica dos 386
+    // 1 request: lista com nome + ID extraído da URL
     const listRes = await fetchJSON(`${API}/pokemon?limit=386&offset=0`);
-    const urls    = listRes.results.map(p => p.url);
+    allPokemon = listRes.results.map((p, i) => ({
+        id:    i + 1,
+        name:  p.name,
+        url:   p.url,
+        types: [],        // será preenchido em background
+        _loaded: false,
+    }));
 
-    // Fetch em batches de 50 para não sobrecarregar
-    const BATCH = 50;
-    const results = [];
-    for (let i = 0; i < urls.length; i += BATCH) {
-        const batch = urls.slice(i, i + BATCH);
-        const data  = await Promise.all(batch.map(u => fetchJSON(u)));
-        results.push(...data);
-        // update progress
-        updateHeroCount(`${results.length} / 386`);
+    updateHeroCount(`386 Pokémon disponíveis`);
+
+    // Renderiza imediatamente (cards sem tipo ainda)
+    applyFilters();
+
+    // Background: busca detalhes em batches de 20, atualiza cards
+    fetchDetailsInBackground();
+}
+
+async function fetchDetailsInBackground() {
+    const BATCH = 20;
+    for (let i = 0; i < allPokemon.length; i += BATCH) {
+        const batch = allPokemon.slice(i, i + BATCH);
+        const details = await Promise.all(batch.map(p => fetchJSON(p.url).catch(() => null)));
+        details.forEach((data, j) => {
+            if (!data) return;
+            const idx = i + j;
+            allPokemon[idx] = { ...allPokemon[idx], ...data, _loaded: true };
+            detailCache[data.id] = data;
+            // Atualiza o card já renderizado sem re-renderizar tudo
+            updateCardTypes(data);
+        });
     }
+}
 
-    allPokemon = results;
-    updateHeroCount(`${allPokemon.length} Pokémon disponíveis`);
+// Atualiza tipos e barra colorida de um card já no DOM
+function updateCardTypes(poke) {
+    const card = document.querySelector(`.poke-card[data-id="${poke.id}"]`);
+    if (!card) return;
+    const primary = poke.types[0]?.type.name;
+    const clr     = TYPE_COLOR[primary] || "#888";
+    const bar = card.querySelector(".card-type-bar");
+    if (bar) bar.style.background = clr;
+    const glow = card.querySelector(".card-img-glow");
+    if (glow) glow.style.setProperty("--type-clr", clr);
+    const typesEl = card.querySelector(".card-types");
+    if (typesEl) {
+        typesEl.innerHTML = poke.types.map(t =>
+            `<span class="type-pill" style="background:${TYPE_COLOR[t.type.name]||"#888"}">${t.type.name}</span>`
+        ).join("");
+    }
 }
 
 /* ══════════════════════════════════════════════════════════════
    FILTERS
 ══════════════════════════════════════════════════════════════ */
+const PAGE_SIZE = 48;
+let currentPage = 0;
+
 function applyFilters() {
     const gens = GAME_GENS[activeGame] || [1,2,3];
 
     filtered = allPokemon.filter(p => {
-        // Gen filter (via game or direct)
         const pGen = getGen(p.id);
         if (activeGame !== "all" && !gens.includes(pGen)) return false;
         if (activeGen  !== "all" && pGen !== +activeGen)  return false;
-
-        // Type filter
-        if (activeType !== "all" && !p.types.some(t => t.type.name === activeType)) return false;
-
-        // Search
+        if (activeType !== "all") {
+            if (!p._loaded) return false;  // aguarda detalhes
+            if (!p.types.some(t => t.type.name === activeType)) return false;
+        }
         if (activeSearch) {
             const numMatch  = p.id.toString() === activeSearch;
             const nameMatch = p.name.includes(activeSearch);
             if (!numMatch && !nameMatch) return false;
         }
-
         return true;
     });
 
-    renderGrid(filtered);
+    currentPage = 0;
+    renderPage();
+}
+
+function renderPage() {
+    const start = currentPage * PAGE_SIZE;
+    const slice = filtered.slice(start, start + PAGE_SIZE);
+    const isFirstPage = currentPage === 0;
+
+    renderGrid(slice, isFirstPage);
+
+    const total = filtered.length;
+    const shown = Math.min(start + PAGE_SIZE, total);
     document.getElementById("resultsCount").innerHTML =
-        `<strong>${filtered.length}</strong> Pokémon encontrados`;
+        `<strong>${shown}</strong> de <strong>${total}</strong> Pokémon`;
+
+    const old = document.getElementById("btnMore");
+    if (old) old.remove();
+    if (shown < total) {
+        const btn = document.createElement("button");
+        btn.id = "btnMore";
+        btn.className = "btn-search";
+        btn.style.cssText = "margin:24px auto 0;display:flex;max-width:220px;";
+        btn.innerHTML = `<i class="fa-solid fa-chevron-down"></i>&nbsp;VER MAIS`;
+        btn.onclick = () => { currentPage++; renderPage(); };
+        document.getElementById("pokedexGrid").insertAdjacentElement("afterend", btn);
+    }
 }
 
 function getGen(id) {
@@ -583,9 +649,9 @@ function renderChips() {
 /* ══════════════════════════════════════════════════════════════
    RENDER GRID
 ══════════════════════════════════════════════════════════════ */
-function renderGrid(list) {
+function renderGrid(list, replace = true) {
     const grid = document.getElementById("pokedexGrid");
-    grid.innerHTML = "";
+    if (replace) grid.innerHTML = "";
 
     if (!list.length) {
         grid.innerHTML = `
@@ -597,27 +663,32 @@ function renderGrid(list) {
     }
 
     list.forEach((p, idx) => {
-        const primary = p.types[0].type.name;
-        const clr     = TYPE_COLOR[primary] || "#888";
-        const img     = SPRITE_URL(p.id);
+        // types pode estar vazio enquanto background fetch não terminou
+        const primary = p.types?.[0]?.type?.name || null;
+        const clr     = primary ? (TYPE_COLOR[primary] || "#888") : "#2a2a3a";
+        // Usa sprite pequeno (PNG ~2KB) para carregamento imediato
+        const img     = MINI_URL(p.id);
 
         const card = document.createElement("div");
         card.className = "poke-card";
-        card.style.animationDelay = `${Math.min(idx * 0.03, 1)}s`;
+        card.dataset.id = p.id;
+        card.style.animationDelay = `${Math.min(idx * 0.025, 0.8)}s`;
         card.innerHTML = `
             <div class="card-type-bar" style="background:${clr};"></div>
             <div class="card-img-wrap">
                 <div class="card-img-glow" style="--type-clr:${clr};"></div>
-                <img src="${img}" alt="${p.name}" loading="lazy"
-                     onerror="this.src='${MINI_URL(p.id)}'">
+                <img src="${img}" alt="${p.name}" loading="lazy" width="96" height="96">
             </div>
             <div class="card-body-inner">
                 <span class="card-num">#${String(p.id).padStart(4,"0")}</span>
                 <span class="card-name">${p.name}</span>
                 <div class="card-types">
-                    ${p.types.map(t =>
-                        `<span class="type-pill" style="background:${TYPE_COLOR[t.type.name]||"#888"}">${t.type.name}</span>`
-                    ).join("")}
+                    ${primary
+                        ? p.types.map(t =>
+                            `<span class="type-pill" style="background:${TYPE_COLOR[t.type.name]||"#888"}">${t.type.name}</span>`
+                          ).join("")
+                        : `<span style="font-size:.6rem;color:var(--muted);">carregando...</span>`
+                    }
                 </div>
             </div>`;
         card.addEventListener("click", () => openModal(p.id));
