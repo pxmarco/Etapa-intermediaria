@@ -1,45 +1,48 @@
-# Etapa-intermediaria
-Entrega intermediária de Bootcamp II.
-
-<h1 align="center">🚀 PokéDex GBA Master</h1>
+<h1 align="center">🚀 PokéDex GBA Master Edition</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Status-Concluído-brightgreen" alt="Status">
-  <img src="https://img.shields.io/badge/Deploy-GitHub%20Pages-blue" alt="Deploy">
-  <img src="https://img.shields.io/badge/Tests-Passing-success" alt="Tests">
+  <img src="https://img.shields.io/badge/Status-Finalizado-brightgreen" alt="Status">
+  <img src="https://img.shields.io/badge/API-PokéAPI-red" alt="API">
+  <img src="https://img.shields.io/badge/Tecnologia-JS%20Vanilla-yellow" alt="JS">
 </p>
 
 <p align="center">
-  Aplicação analítica que consome a <strong>PokéAPI</strong> para listar e detalhar Pokémons das gerações clássicas (GBA), com foco em performance e design dark.
+  Uma ferramenta analítica de alto desempenho para consulta de Pokémons das eras <strong>FireRed, LeafGreen, Ruby, Sapphire e Emerald</strong>.
 </p>
 
 <hr>
 
-<h2>🔗 Link do Deploy</h2>
-<p>👉 <strong><a href="https://pxmarco.github.io/Etapa-intermediaria/">Acesse a aplicação aqui</a></strong></p>
+<h2>🔗 Links Oficiais</h2>
+<p>
+  🌐 <strong>Deploy (Site):</strong> <a href="https://pxmarco.github.io/Etapa-intermediaria/">Acesse a aplicação aqui</a><br>
+  📂 <strong>Repositório:</strong> <a href="https://github.com/pxmarco/Etapa-intermediaria">Acesse o código-fonte</a>
+</p>
 
 <hr>
 
-<h2>🛠️ Tecnologias e Recursos</h2>
+<h2>📖 Sobre o Projeto</h2>
+<p>
+  Esta aplicação foi desenvolvida para consolidar conhecimentos em <strong>consumo de APIs REST</strong> e manipulação dinâmica do DOM. A interface é focada na estética Dark dos consoles portáteis e permite consultas complexas aos dados técnicos dos jogos.
+</p>
+
+<h3>Principais Funcionalidades:</h3>
 <ul>
-  <li><strong>Front-end:</strong> HTML5, CSS3 (Custom Properties), Bootstrap 5.</li>
-  <li><strong>Integração:</strong> JavaScript Assíncrono (Fetch API).</li>
-  <li><strong>Qualidade:</strong> Teste de integração automatizado com Node.js.</li>
-  <li><strong>CI/CD:</strong> GitHub Actions para validação automatizada de cada push.</li>
+  <li><strong>Filtros Integrados:</strong> Busca por geração (GBA), tipo elemental e nome/ID simultaneamente.</li>
+  <li><strong>Modal Analítico:</strong> Exibição de Base Stats (HP, Ataque, Defesa, etc.) com barras de progresso dinâmicas.</li>
+  <li><strong>Ciclo Evolutivo Clicável:</strong> Navegação entre evoluções sem fechar o Pop-up atual.</li>
+  <li><strong>Dados de Jogo:</strong> Informações de localização e cheat codes para emulação GBA.</li>
 </ul>
 
-<h2>📋 Requisitos Cumpridos (Etapa Intermediária)</h2>
-<ul>
-  <li>✅ <strong>Consumo de API:</strong> Dados dinâmicos (stats, tipos, imagens) via PokéAPI.</li>
-  <li>✅ <strong>Branching:</strong> Fluxo de trabalho profissional na branch <code>entrega-intermediaria</code>.</li>
-  <li>✅ <strong>Gestão:</strong> Uso de GitHub Issues para documentação de requisitos.</li>
-  <li>✅ <strong>Teste:</strong> Script <code>integration.test.js</code> validando a integridade dos dados.</li>
-  <li>✅ <strong>Deploy:</strong> Publicação oficial via GitHub Pages.</li>
-</ul>
-
+<h2>🛠️ Como foi desenvolvido?</h2>
+<ol>
+  <li><strong>Estrutura:</strong> HTML5 e Bootstrap 5 para uma base responsiva e moderna.</li>
+  <li><strong>Estilização:</strong> CSS3 com variáveis globais para gerenciar as cores de cada tipo Pokémon.</li>
+  <li><strong>Lógica:</strong> JavaScript puro (Vanilla) utilizando <code>async/await</code> para garantir chamadas assíncronas rápidas e sem travamentos.</li>
+  <li><strong>Qualidade:</strong> Implementação de testes de integração e CI/CD via GitHub Actions.</li>
+</ol>
 
 <hr>
 
 <p align="center">
-  <em>Desenvolvido como parte da Etapa Intermediária do Bootcamp de Desenvolvimento.</em>
+  <em>Projeto desenvolvido para a Etapa Intermediária do Bootcamp de Desenvolvimento.</em>
 </p>
