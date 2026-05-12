@@ -1,3 +1,6 @@
+
+Copiar
+
 const API_URL = "https://pokeapi.co/api/v2/pokemon/";
  
 // Ao carregar, mostra os iniciais da Gen 1
@@ -111,10 +114,15 @@ async function openDetails(id) {
  
     const modalEl = document.getElementById('pokeModal');
     const existing = bootstrap.Modal.getInstance(modalEl);
-    if (existing) existing.hide();
-    // Remove backdrops órfãos antes de abrir o novo
-    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-    document.body.classList.remove('modal-open');
-    document.body.style.removeProperty('padding-right');
-    new bootstrap.Modal(modalEl).show();
+    if (existing) {
+        modalEl.addEventListener('hidden.bs.modal', () => {
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style.removeProperty('padding-right');
+            new bootstrap.Modal(modalEl).show();
+        }, { once: true });
+        existing.hide();
+    } else {
+        new bootstrap.Modal(modalEl).show();
+    }
 }
