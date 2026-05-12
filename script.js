@@ -110,12 +110,12 @@ async function openDetails(id) {
     }
  
     const modalEl = document.getElementById('pokeModal');
-    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-    const isVisible = modalEl.classList.contains('show');
-    if (isVisible) {
-        modalEl.addEventListener('hidden.bs.modal', () => modal.show(), { once: true });
-        modal.hide();
-    } else {
-        modal.show();
+
+    let modal = bootstrap.Modal.getInstance(modalEl);
+    
+    if (!modal) {
+        modal = new bootstrap.Modal(modalEl);
     }
+    
+    modal.show();
 }
