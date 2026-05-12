@@ -13,24 +13,33 @@ async function triggerSearch() {
 
     try {
         let list = [];
-        if (search) {
-            const p = await fetch(`${API_URL}${search}`).then(res => res.json());
-            list = [p];
-        } else {
-            // Define limites GBA
-            let limit = 151, offset = 0;
-            if (gen === "2") { limit = 100; offset = 151; }
-            if (gen === "3") { limit = 135; offset = 251; }
 
-            const data = await fetch(`${API_URL}?limit=${limit}&offset=${offset}`).then(res => res.json());
-            // Carrega apenas os necessários para não travar
-            list = await Promise.all(data.results.map(item => fetch(item.url).then(res => res.json())));
-            
-            // Filtro de tipo cumulativo
-            if (type !== 'all') {
-                list = list.filter(p => p.types.some(t => t.type.name === type));
+        // Define limites por geração
+        let limit = 151, offset = 0;
+        if (gen === "2") { limit = 100; offset = 151; }
+        if (gen === "3") { limit = 135; offset = 251; }
+
+        if (search) {
+            // Tenta busca direta pelo nome/número exato primeiro
+            const exactRes = await fetch(`${API_URL}${search}`);
+            if (exactRes.ok) {
+                list = [await exactRes.json()];
+            } else {
+                // Busca parcial: carrega a gen atual e filtra por nome
+                const data = await fetch(`${API_URL}?limit=${limit}&offset=${offset}`).then(res => res.json());
+                const matched = data.results.filter(p => p.name.includes(search));
+                list = await Promise.all(matched.map(item => fetch(item.url).then(res => res.json())));
             }
+        } else {
+            const data = await fetch(`${API_URL}?limit=${limit}&offset=${offset}`).then(res => res.json());
+            list = await Promise.all(data.results.map(item => fetch(item.url).then(res => res.json())));
         }
+
+        // Filtro de tipo
+        if (type !== 'all') {
+            list = list.filter(p => p.types.some(t => t.type.name === type));
+        }
+
         render(list);
     } catch (e) {
         container.innerHTML = '<p class="text-center w-100">Não encontrado.</p>';
@@ -39,6 +48,10 @@ async function triggerSearch() {
 
 function render(pokes) {
     const container = document.getElementById('pokedexContainer');
+    if (!pokes.length) {
+        container.innerHTML = '<p class="text-center w-100">Nenhum resultado encontrado.</p>';
+        return;
+    }
     container.innerHTML = pokes.map(p => `
         <div class="col">
             <div class="poke-card glow-${p.types[0].type.name}" onclick="openDetails(${p.id})">
@@ -60,7 +73,10 @@ async function openDetails(id) {
     
     const body = document.getElementById('modalBody');
     body.innerHTML = `
-        <div class="modal-body">
+        <div class="modal-header border-0 pb-0">
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body pt-0">
             <div class="row align-items-center">
                 <div class="col-md-5 text-center">
                     <img src="${p.sprites.other['official-artwork'].front_default}" class="img-fluid">
