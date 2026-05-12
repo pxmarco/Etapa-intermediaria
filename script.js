@@ -74,13 +74,15 @@ async function openDetails(id) {
     const body = document.getElementById('modalBody');
     body.innerHTML = `
         <div class="modal-header border-0 pb-0">
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <button type="button" class="btn-close btn-close-white" onclick="bootstrap.Modal.getInstance(document.getElementById('pokeModal')).hide()"></button>
         </div>
         <div class="modal-body pt-0">
             <div class="row align-items-center">
                 <div class="col-md-5 text-center">
                     <img src="${p.sprites.other['official-artwork'].front_default}" class="img-fluid">
-                    <h3 class="text-capitalize mt-2">${p.name}</h3>
+                    <small class="text-muted">#${p.id}</small>
+                    <h3 class="text-capitalize mt-1">${p.name}</h3>
+                    <div class="mb-2">${p.types.map(t => `<span class="type-badge" style="background:var(--${t.type.name})">${t.type.name}</span>`).join('')}</div>
                 </div>
                 <div class="col-md-7">
                     ${p.stats.map(s => `
@@ -112,3 +114,4 @@ async function openDetails(id) {
 
     new bootstrap.Modal(document.getElementById('pokeModal')).show();
 }
+
