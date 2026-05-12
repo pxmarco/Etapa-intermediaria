@@ -1,24 +1,24 @@
 const API_URL = "https://pokeapi.co/api/v2/pokemon/";
-
+ 
 // Ao carregar, mostra os iniciais da Gen 1
 window.onload = () => triggerSearch();
-
+ 
 async function triggerSearch() {
     const search = document.getElementById('searchInput').value.toLowerCase().trim();
     const gen = document.getElementById('genFilter').value;
     const type = document.getElementById('typeFilter').value;
     const container = document.getElementById('pokedexContainer');
-
+ 
     container.innerHTML = '<div class="text-center w-100"><div class="spinner-border text-danger"></div></div>';
-
+ 
     try {
         let list = [];
-
+ 
         // Define limites por geração
         let limit = 151, offset = 0;
         if (gen === "2") { limit = 100; offset = 151; }
         if (gen === "3") { limit = 135; offset = 251; }
-
+ 
         if (search) {
             // Tenta busca direta pelo nome/número exato primeiro
             const exactRes = await fetch(`${API_URL}${search}`);
@@ -34,18 +34,18 @@ async function triggerSearch() {
             const data = await fetch(`${API_URL}?limit=${limit}&offset=${offset}`).then(res => res.json());
             list = await Promise.all(data.results.map(item => fetch(item.url).then(res => res.json())));
         }
-
+ 
         // Filtro de tipo
         if (type !== 'all') {
             list = list.filter(p => p.types.some(t => t.type.name === type));
         }
-
+ 
         render(list);
     } catch (e) {
         container.innerHTML = '<p class="text-center w-100">Não encontrado.</p>';
     }
 }
-
+ 
 function render(pokes) {
     const container = document.getElementById('pokedexContainer');
     if (!pokes.length) {
@@ -65,7 +65,7 @@ function render(pokes) {
         </div>
     `).join('');
 }
-
+ 
 async function openDetails(id) {
     const p = await fetch(`${API_URL}${id}`).then(res => res.json());
     const species = await fetch(p.species.url).then(res => res.json());
@@ -108,18 +108,14 @@ async function openDetails(id) {
         </div>`;
         curr = curr.evolves_to[0];
     }
-
+ 
     const modalEl = document.getElementById('pokeModal');
-    const existing = bootstrap.Modal.getInstance(modalEl);
-    if (existing) {
-        modalEl.addEventListener('hidden.bs.modal', () => {
-            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-            document.body.classList.remove('modal-open');
-            document.body.style.removeProperty('padding-right');
-            new bootstrap.Modal(modalEl).show();
-        }, { once: true });
-        existing.hide();
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    const isVisible = modalEl.classList.contains('show');
+    if (isVisible) {
+        modalEl.addEventListener('hidden.bs.modal', () => modal.show(), { once: true });
+        modal.hide();
     } else {
-        new bootstrap.Modal(modalEl).show();
+        modal.show();
     }
 }
